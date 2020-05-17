@@ -1,0 +1,64 @@
+@startuml
+
+package chess.game {
+  package pieces {
+    class Board {
+      - Map<Location, Spot> spots
+    }
+
+    class Spot {
+      - Location location
+      - Piece piece
+    }
+
+    class Location <<value>> {
+      - int x
+      - int y
+
+    }
+
+    abstract class Piece {
+      # PieceType pieceType
+      + {static} {abstract} getPieceDistribution()
+    }
+
+    class WhitePiece {
+      - {static} Map<PieceType, int> pieceDistribution
+      + {static} getPieceDistribution()
+      - PieceType pieceType
+    }
+
+    class BlackPiece {
+      - {static} Map<PieceType, int> pieceDistribution
+      + {static} getPieceDistribution()
+      - PieceType pieceType
+    }
+
+    class PieceType {
+      - String name
+      - boolean canJump
+      - Set<RelativeMove> relativeMoves
+    }
+
+    class RelativeMove {
+      + Location calculateRelativeMove(Location currentPieceLocation)
+    }
+
+    Board "1" o-- "many" Spot
+    Board "1" <.. "many" Location
+
+    Spot "1" *-- "1" Location
+    Spot *-- Piece
+
+    Piece *-- PieceType
+
+    PieceType o-- RelativeMove
+
+    BlackPiece --|> Piece
+    WhitePiece --|> Piece
+
+    BlackPiece *-- PieceType
+    WhitePiece *-- PieceType
+  }
+}
+@enduml
